@@ -2,8 +2,10 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import connectDB from '../config/db.js'
+import cashPaymentRoutes from '../routes/cashPaymentRoutes.js'
 import creditRoutes from '../routes/creditRoutes.js'
 import customerRoutes from '../routes/customerRoutes.js'
+import dealerRoutes from '../routes/dealerRoutes.js'
 import employeeRoutes from '../routes/employeeRoutes.js'
 import profitRoutes from '../routes/expenseRoutes.js'
 import expenseRoutes from '../routes/profitRoutes.js'
@@ -29,6 +31,8 @@ app.use("/api", customerRoutes)
 app.use("/api", creditRoutes)
 app.use("/api", expenseRoutes)
 app.use("/api", profitRoutes)
+app.use("/api", dealerRoutes)
+app.use("/api", cashPaymentRoutes)
 
 
 app.get("/", (req, res) => {
