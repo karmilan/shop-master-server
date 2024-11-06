@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import express from 'express'
 import connectDB from '../config/db.js'
 import cashPaymentRoutes from '../routes/cashPaymentRoutes.js'
+import cheqPaymentRoutes from '../routes/cheqPaymentRoutes.js'
+import credPaymentRoutes from '../routes/credPaymentRoutes.js'
 import creditRoutes from '../routes/creditRoutes.js'
 import customerRoutes from '../routes/customerRoutes.js'
 import dealerRoutes from '../routes/dealerRoutes.js'
@@ -33,6 +35,8 @@ app.use("/api", expenseRoutes)
 app.use("/api", profitRoutes)
 app.use("/api", dealerRoutes)
 app.use("/api", cashPaymentRoutes)
+app.use("/api", cheqPaymentRoutes)
+app.use("/api", credPaymentRoutes)
 
 
 app.get("/", (req, res) => {

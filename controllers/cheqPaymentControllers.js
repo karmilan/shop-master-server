@@ -25,7 +25,7 @@ const addCheqPayment = async (req, res) => {
             return res.status(404).json({ error: 'Dealer not found ll' });
         }
 
-        const cheqPayment = await CheqPayment.create({ d, chequeNumber, bankName, amount, chequeDate, paymentDate, isCleared, z dealer: assignedDealer })
+        const cheqPayment = await CheqPayment.create({ id, chequeNumber, bankName, amount, chequeDate, paymentDate, isCleared, dealer: assignedDealer })
         res.status(201).json({ message: 'cheqPayment added', cheqPayment })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -51,19 +51,19 @@ const getSingleCheqPayment = async (req, res) => {
     }
 }
 
-// get cash payments by dealer
+// get cheq payments by dealer
 const getCheqPaymentsByDealer = async (req, res) => {
     const { id } = req.params
     try {
         const cheqPayment = await CheqPayment.find({ dealer: id }).populate('dealer')
         if (!cheqPayment) {
             res.status(404)
-            return res.status(404).json({ message: "cash payment not found" })
+            return res.status(404).json({ message: "cheq payment not found" })
         }
         res.status(200).json({ cheqPayment })
     } catch (error) {
         if (error.name === "CastError" && error.kind === "ObjectId") {
-            return res.status(400).json({ message: "Invalid cash payment ID" })
+            return res.status(400).json({ message: "Invalid cheq payment ID" })
         }
         res.status(500).json({ message: error.message })
     }
