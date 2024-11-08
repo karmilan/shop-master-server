@@ -14,7 +14,7 @@ const getCashPayments = async (req, res) => {
 
 // add new cashPayment
 const addCashPayment = async (req, res) => {
-    const { id, amount, dealer } = req.body
+    const { id, amount, paymentDate, dealer } = req.body
     // const { id } = req.params
     try {
 
@@ -25,7 +25,7 @@ const addCashPayment = async (req, res) => {
             return res.status(404).json({ error: 'Dealer not found ll' });
         }
 
-        const cashPayment = await CashPayment.create({ id, amount, dealer: assignedDealer })
+        const cashPayment = await CashPayment.create({ id, amount, paymentDate, dealer: assignedDealer })
         res.status(201).json({ message: 'cashPayment added', cashPayment })
     } catch (error) {
         res.status(500).json({ message: error.message })
