@@ -12,10 +12,10 @@ const getDealers = async (req, res) => {
 
 // add new dealer
 const addDealer = async (req, res) => {
-    const { name, contactNumber, address, email, creditLimit } = req.body
+    const { dealerId, name, contactNumber, address, email, creditLimit } = req.body
 
     try {
-        const dealer = await Dealer.create({ name, contactNumber, address, email, creditLimit })
+        const dealer = await Dealer.create({ dealerId, name, contactNumber, address, email, creditLimit })
         res.status(201).json({ message: 'dealer added' })
     } catch (error) {
         res.status(500).json({ message: error.message })

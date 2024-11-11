@@ -2,6 +2,11 @@ import mongoose from 'mongoose'
 
 const dealerSchema = mongoose.Schema({
 
+    dealerId: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: {
         type: String,
         required: true,
