@@ -2,6 +2,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import connectDB from '../config/db.js'
+import authRoutes from '../routes/authRoutes.js'
 import cashPaymentRoutes from '../routes/cashPaymentRoutes.js'
 import cheqPaymentRoutes from '../routes/cheqPaymentRoutes.js'
 import credPaymentRoutes from '../routes/credPaymentRoutes.js'
@@ -37,6 +38,7 @@ app.use("/api", dealerRoutes)
 app.use("/api", cashPaymentRoutes)
 app.use("/api", cheqPaymentRoutes)
 app.use("/api", credPaymentRoutes)
+app.use("/api/auth", authRoutes)
 
 
 app.get("/", (req, res) => {
