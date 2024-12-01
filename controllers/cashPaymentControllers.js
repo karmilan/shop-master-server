@@ -5,7 +5,7 @@ import Dealer from '../models/dealerModel.js';
 // get cashPayments
 const getCashPayments = async (req, res) => {
     try {
-        const cashPayments = await CashPayment.find({})
+        const cashPayments = await CashPayment.find({}).populate('dealer', 'name').exec()
         res.status(200).json(cashPayments)
     } catch (error) {
         res.status(500).json(error)
