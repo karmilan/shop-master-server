@@ -5,7 +5,7 @@ import Dealer from '../models/dealerModel.js';
 // get credPayments
 const getCredPayments = async (req, res) => {
     try {
-        const credPayments = await CredPayment.find({})
+        const credPayments = await CredPayment.find({}).populate('dealer', 'name').exec()
         res.status(200).json(credPayments)
     } catch (error) {
         res.status(500).json(error)
