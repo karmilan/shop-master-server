@@ -1,6 +1,11 @@
 import mongoose from 'mongoose'
 
 const customerSchema = mongoose.Schema({
+    customerId: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: {
         type: String,
         required: true

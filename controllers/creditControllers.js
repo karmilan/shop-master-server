@@ -1,15 +1,13 @@
 import Credit from '../models/creditModel.js';
 import Customer from '../models/customerModel.js';
-import Employee from '../models/employeeModel.js';
-import Shop from '../models/shopModel.js';
 
 
 // get credits
 const getCredits = async (req, res) => {
     try {
-        const credits = await Credit.find({});
+        const credits = await Credit.find({}).populate('customer', 'name').exec();
         // const credits = await Credit.find().populate('customer');
-        res.status(200).json( credits );
+        res.status(200).json(credits);
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -58,7 +56,7 @@ const getSingleCredit = async (req, res) => {
 const getCreditsByCustomer = async (req, res) => {
     const { id } = req.params
     try {
-        const credit = await Credit.find({customer:id}).populate('customer')
+        const credit = await Credit.find({ customer: id }).populate('customer')
         if (!credit) {
             res.status(404)
             return res.status(404).json({ message: "credit not found" })
@@ -82,12 +80,12 @@ const updateCredit = async (req, res) => {
             return res.status(404).json({ message: "credit not found" })
         }
         credit.amount = req.body.amount || credit.amount
-        
+
         const updateCredit = await credit.save();
         res.status(200).json({
             id: updateCredit._id,
             amount: updateCredit.amount,
-           
+
         })
     } catch (error) {
         if (error.name === "CastError" && error.kind === "ObjectId") {
@@ -113,4 +111,5 @@ const deleteCredit = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { getCredits, addCredit, getSingleCredit, getCreditsByCustomer, updateCredit, deleteCredit }
+export { addCredit, deleteCredit, getCredits, getCreditsByCustomer, getSingleCredit, updateCredit };
+

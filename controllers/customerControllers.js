@@ -12,10 +12,10 @@ const getCustomers = async (req, res) => {
 
 // add new customer
 const addCustomer = async (req, res) => {
-    const { name, email, phone, address, creditLimit } = req.body
+    const { customerId, name, email, phone, address, creditLimit } = req.body
     console.log("req.body>>>", req.body)
     try {
-        const customer = await Customer.create({ name, email, phone, address, creditLimit })
+        const customer = await Customer.create({ customerId, name, email, phone, address, creditLimit })
         res.status(201).json({ message: 'customer added' })
     } catch (error) {
         res.status(500).json({ message: error.message })
