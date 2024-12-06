@@ -11,6 +11,7 @@ import customerRoutes from '../routes/customerRoutes.js'
 import dealerRoutes from '../routes/dealerRoutes.js'
 import employeeRoutes from '../routes/employeeRoutes.js'
 import profitRoutes from '../routes/expenseRoutes.js'
+import paymentRoutes from '../routes/paymentRoutes.js'
 import expenseRoutes from '../routes/profitRoutes.js'
 import shopRoutes from '../routes/shopRoutes.js'
 import userRoutes from '../routes/userRoutes.js'
@@ -39,6 +40,7 @@ app.use("/api", dealerRoutes)
 app.use("/api", cashPaymentRoutes)
 app.use("/api", cheqPaymentRoutes)
 app.use("/api", credPaymentRoutes)
+app.use("/api", paymentRoutes)
 app.use("/api", userRoutes)
 app.use("/api/auth", authRoutes)
 
