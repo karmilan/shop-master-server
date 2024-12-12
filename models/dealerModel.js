@@ -26,6 +26,10 @@ const dealerSchema = mongoose.Schema({
         type: Number,
         default: 0,
     },
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Shop' // Reference to the Shop model for the shop where the employee works
+    },
 },
     { timestamps: true }
 )

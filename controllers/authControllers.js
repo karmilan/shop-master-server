@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import Shop from '../models/shopModel.js'
 import User from "../models/userModel.js"
 
 const register = async (req, res) => {
@@ -18,8 +19,20 @@ const register = async (req, res) => {
 }
 const login = async (req, res) => {
     try {
-        const { username, password } = req.body
+
+        let { username, password, shop } = req.body
+
+        // Check if the shop exists
+        const assignedShop = await Shop.findById(shop)
+        console.log("assignedShop>>>", assignedShop);
+
+        if (!assignedShop) {
+            return res.status(404).json({ error: 'Shop not found' });
+        }
+
         const user = await User.findOne({ username })
+        console.log(user.shop);
+
         if (!user) {
             return res.status(404).json({ message: `user with username ${username} not found` })
         }
@@ -30,7 +43,8 @@ const login = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" })
-        res.status(200).json({ token, user })
+        res.status(200).json({ token, user, assignedShop })
+
 
     } catch (error) {
         res.status(500).json({ message: error.message })

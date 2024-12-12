@@ -22,7 +22,7 @@ const addEmployee = async (req, res) => {
         const assignedShop = await Shop.findById(shop);
 
         if (!assignedShop) {
-            return res.status(404).json({ error: 'Shop not found ll' });
+            return res.status(404).json({ error: 'Shop not found' });
         }
 
         const employee = await Employee.create({ name, role, address, phone, shop: assignedShop })
@@ -98,3 +98,4 @@ const deleteEmployee = async (req, res) => {
     }
 }
 export { addEmployee, deleteEmployee, getEmployees, getSingleEmployee, updateEmployee };
+

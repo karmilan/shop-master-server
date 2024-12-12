@@ -1,4 +1,5 @@
 import Dealer from '../models/dealerModel.js';
+import Shop from '../models/shopModel.js';
 
 // get dealers
 const getDealers = async (req, res) => {
@@ -12,10 +13,16 @@ const getDealers = async (req, res) => {
 
 // add new dealer
 const addDealer = async (req, res) => {
-    const { dealerId, name, contactNumber, address, email, creditLimit } = req.body
+    const { dealerId, name, contactNumber, address, email, creditLimit, shop } = req.body
 
     try {
-        const dealer = await Dealer.create({ dealerId, name, contactNumber, address, email, creditLimit })
+        // Check if the shop exists
+        const assignedShop = await Shop.findById(shop);
+
+        if (!assignedShop) {
+            return res.status(404).json({ error: 'Shop not found' });
+        }
+        const dealer = await Dealer.create({ dealerId, name, contactNumber, address, email, creditLimit, shop: assignedShop })
         res.status(201).json({ message: 'dealer added' })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -31,6 +38,24 @@ const getSingleDealer = async (req, res) => {
         if (!dealer) {
             res.status(404)
             return res.status(404).json({ message: "Dealer not found" })
+        }
+        res.status(200).json({ dealer })
+    } catch (error) {
+        if (error.name === "CastError" && error.kind === "ObjectId") {
+            return res.status(400).json({ message: "Invalid dealer ID" })
+        }
+        res.status(500).json({ message: error.message })
+    }
+}
+
+// get dealers by shop
+const getDealersByShop = async (req, res) => {
+    const { id } = req.params
+    try {
+        const dealer = await Dealer.find({ shop: id }).populate('shop')
+        if (!dealer) {
+            res.status(404)
+            return res.status(404).json({ message: "dealer not found" })
         }
         res.status(200).json({ dealer })
     } catch (error) {
@@ -88,5 +113,5 @@ const deleteDealer = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addDealer, deleteDealer, getDealers, getSingleDealer, updateDealer };
+export { addDealer, deleteDealer, getDealers, getDealersByShop, getSingleDealer, updateDealer };
 

@@ -15,6 +15,10 @@ const userSchema = mongoose.Schema({
         required: true,
         enum: ["admin", "manager", "user"]
     },
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Shop' // Reference to the Shop model for the shop where the employee works
+    },
 
 },
     { timestamps: true }
