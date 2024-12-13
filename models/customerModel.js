@@ -26,7 +26,11 @@ const customerSchema = mongoose.Schema({
     creditLimit: {
         type: Number,
         required: false
-    }
+    },
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Shop' // Reference to the Shop model for the shop where the customer applies
+    },
 },
     { timestamps: true }
 )

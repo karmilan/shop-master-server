@@ -1,4 +1,5 @@
 import Customer from '../models/customerModel.js';
+import Shop from '../models/shopModel.js';
 
 // get customers
 const getCustomers = async (req, res) => {
@@ -12,10 +13,17 @@ const getCustomers = async (req, res) => {
 
 // add new customer
 const addCustomer = async (req, res) => {
-    const { customerId, name, email, phone, address, creditLimit } = req.body
+    const { customerId, name, email, phone, address, creditLimit, shop } = req.body
     console.log("req.body>>>", req.body)
     try {
-        const customer = await Customer.create({ customerId, name, email, phone, address, creditLimit })
+        // Check if the shop exists
+        const assignedShop = await Shop.findById(shop);
+
+        if (!assignedShop) {
+            return res.status(404).json({ error: 'Shop not found' });
+        }
+
+        const customer = await Customer.create({ customerId, name, email, phone, address, creditLimit, shop: assignedShop })
         res.status(201).json({ message: 'customer added' })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -36,6 +44,24 @@ const getSingleCustomer = async (req, res) => {
     } catch (error) {
         if (error.name === "CastError" && error.kind === "ObjectId") {
             return res.status(400).json({ message: "Invalid customer ID" })
+        }
+        res.status(500).json({ message: error.message })
+    }
+}
+
+// get customers by shop
+const getCustomersByShop = async (req, res) => {
+    const { id } = req.params
+    try {
+        const customer = await Customer.find({ shop: id }).populate('shop')
+        if (!customer) {
+            res.status(404)
+            return res.status(404).json({ message: "customer not found" })
+        }
+        res.status(200).json({ customer })
+    } catch (error) {
+        if (error.name === "CastError" && error.kind === "ObjectId") {
+            return res.status(400).json({ message: "Invalid dealer ID" })
         }
         res.status(500).json({ message: error.message })
     }
@@ -90,5 +116,5 @@ const deleteCustomer = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addCustomer, deleteCustomer, getCustomers, getSingleCustomer, updateCustomer };
+export { addCustomer, deleteCustomer, getCustomers, getCustomersByShop, getSingleCustomer, updateCustomer };
 

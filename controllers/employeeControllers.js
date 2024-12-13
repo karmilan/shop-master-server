@@ -51,6 +51,24 @@ const getSingleEmployee = async (req, res) => {
     }
 }
 
+// get employees by shop
+const getEmployeesByShop = async (req, res) => {
+    const { id } = req.params
+    try {
+        const employee = await Employee.find({ shop: id }).populate('shop')
+        if (!employee) {
+            res.status(404)
+            return res.status(404).json({ message: "employee not found" })
+        }
+        res.status(200).json({ employee })
+    } catch (error) {
+        if (error.name === "CastError" && error.kind === "ObjectId") {
+            return res.status(400).json({ message: "Invalid dealer ID" })
+        }
+        res.status(500).json({ message: error.message })
+    }
+}
+
 // update employee
 const updateEmployee = async (req, res) => {
     const { id } = req.params
@@ -97,5 +115,5 @@ const deleteEmployee = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addEmployee, deleteEmployee, getEmployees, getSingleEmployee, updateEmployee };
+export { addEmployee, deleteEmployee, getEmployees, getEmployeesByShop, getSingleEmployee, updateEmployee };
 
