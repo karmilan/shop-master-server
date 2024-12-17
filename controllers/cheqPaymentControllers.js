@@ -51,6 +51,32 @@ const getSingleCheqPayment = async (req, res) => {
     }
 }
 
+// get cheq payments by shop
+const getCheqPaymentsByShop = async (req, res) => {
+    const { shop } = req.params
+    console.log("Received shop ID:", shop);
+
+
+    try {
+        const cheqPayment = await CheqPayment.find({}).populate('dealer');
+        console.log("cheqPayment>>>", cheqPayment.dealer);
+        const filteredCheqPayment = cheqPayment.filter(filterVal => filterVal.dealer.shop.toString() === shop);
+
+        console.log("filteredCheqPayment>>>", filteredCheqPayment);
+
+        if (!cheqPayment) {
+            res.status(404)
+            return res.status(404).json({ message: "Cheq Payment not found" })
+        }
+        res.status(200).json({ filteredCheqPayment })
+    } catch (error) {
+        if (error.name === "CastError" && error.kind === "ObjectId") {
+            return res.status(400).json({ message: "Invalid credit ID" })
+        }
+        res.status(500).json({ message: error.message })
+    }
+}
+
 // get cheq payments by dealer
 const getCheqPaymentsByDealer = async (req, res) => {
     const { id } = req.params
@@ -119,5 +145,5 @@ const deleteCheqPayment = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addCheqPayment, deleteCheqPayment, getCheqPayments, getCheqPaymentsByDealer, getSingleCheqPayment, updateCheqPayment };
+export { addCheqPayment, deleteCheqPayment, getCheqPayments, getCheqPaymentsByDealer, getCheqPaymentsByShop, getSingleCheqPayment, updateCheqPayment };
 

@@ -51,6 +51,32 @@ const getSingleCashPayment = async (req, res) => {
     }
 }
 
+// get cash payments by shop
+const getCashPaymentsByShop = async (req, res) => {
+    const { shop } = req.params
+    console.log("Received shop ID:", shop);
+
+
+    try {
+        const cashPayment = await CashPayment.find({}).populate('dealer');
+        console.log("cashPayment>>>", cashPayment.dealer);
+        const filteredCashPayment = cashPayment.filter(filterVal => filterVal.dealer.shop.toString() === shop);
+
+        console.log("filteredCashPayment>>>", filteredCashPayment);
+
+        if (!cashPayment) {
+            res.status(404)
+            return res.status(404).json({ message: "Cash Payment not found" })
+        }
+        res.status(200).json({ filteredCashPayment })
+    } catch (error) {
+        if (error.name === "CastError" && error.kind === "ObjectId") {
+            return res.status(400).json({ message: "Invalid credit ID" })
+        }
+        res.status(500).json({ message: error.message })
+    }
+}
+
 // get cash payments by dealer
 const getCashPaymentsByDealer = async (req, res) => {
     const { id } = req.params
@@ -111,5 +137,5 @@ const deleteCashPayment = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addCashPayment, deleteCashPayment, getCashPayments, getCashPaymentsByDealer, getSingleCashPayment, updateCashPayment };
+export { addCashPayment, deleteCashPayment, getCashPayments, getCashPaymentsByDealer, getCashPaymentsByShop, getSingleCashPayment, updateCashPayment };
 

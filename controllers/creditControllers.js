@@ -52,20 +52,23 @@ const getSingleCredit = async (req, res) => {
     }
 }
 
-// get credit by customer and shop
-const getCreditsByCustomerAndShop = async (req, res) => {
-    const { customer, shop } = req.body
-    console.log("req>>>", req);
+// get credit by shop
+const getCreditsByShop = async (req, res) => {
+    const { shop } = req.params
+    console.log("Received shop ID:", shop);
+
 
     try {
-        const credit = await Customer.findOne({ _id: customer, shop });
-        console.log("cred>>>", credit);
+        const credit = await Credit.find({}).populate('customer');
+        const filteredCredits = credit.filter(credit => credit.customer.shop.toString() === shop);
+
+        console.log("filteredCredits>>>", filteredCredits);
 
         if (!credit) {
             res.status(404)
             return res.status(404).json({ message: "credit not found" })
         }
-        res.status(200).json({ credit })
+        res.status(200).json({ filteredCredits })
     } catch (error) {
         if (error.name === "CastError" && error.kind === "ObjectId") {
             return res.status(400).json({ message: "Invalid credit ID" })
@@ -133,5 +136,5 @@ const deleteCredit = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addCredit, deleteCredit, getCredits, getCreditsByCustomer, getCreditsByCustomerAndShop, getSingleCredit, updateCredit };
+export { addCredit, deleteCredit, getCredits, getCreditsByCustomer, getCreditsByShop, getSingleCredit, updateCredit };
 

@@ -51,6 +51,33 @@ const getSingleCredPayment = async (req, res) => {
     }
 }
 
+// get cred payments by shop
+const getCredPaymentsByShop = async (req, res) => {
+    const { shop } = req.params
+    console.log("Received shop ID:", shop);
+
+
+    try {
+        const credPayment = await CredPayment.find({}).populate('dealer');
+        console.log("credPayment>>>", credPayment.dealer);
+        const filteredCredPayment = credPayment.filter(filterVal => filterVal.dealer.shop.toString() === shop);
+
+        console.log("filteredCredPayment>>>", filteredCredPayment);
+
+        if (!credPayment) {
+            res.status(404)
+            return res.status(404).json({ message: "Cred Payment not found" })
+        }
+        res.status(200).json({ filteredCredPayment })
+    } catch (error) {
+        if (error.name === "CastError" && error.kind === "ObjectId") {
+            return res.status(400).json({ message: "Invalid credit ID" })
+        }
+        res.status(500).json({ message: error.message })
+    }
+}
+
+
 // get cred payments by dealer
 const getCredPaymentsByDealer = async (req, res) => {
     const { id } = req.params
@@ -115,5 +142,5 @@ const deleteCredPayment = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addCredPayment, deleteCredPayment, getCredPayments, getCredPaymentsByDealer, getSingleCredPayment, updateCredPayment };
+export { addCredPayment, deleteCredPayment, getCredPayments, getCredPaymentsByDealer, getCredPaymentsByShop, getSingleCredPayment, updateCredPayment };
 
