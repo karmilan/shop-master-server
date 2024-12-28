@@ -11,6 +11,7 @@ import customerRoutes from '../routes/customerRoutes.js'
 import dealerRoutes from '../routes/dealerRoutes.js'
 import employeeRoutes from '../routes/employeeRoutes.js'
 import profitRoutes from '../routes/expenseRoutes.js'
+import loanSettlementRoutes from '../routes/loanSettlementRoutes.js'
 import paymentRoutes from '../routes/paymentRoutes.js'
 import expenseRoutes from '../routes/profitRoutes.js'
 import shopRoutes from '../routes/shopRoutes.js'
@@ -34,6 +35,7 @@ app.use("/api", shopRoutes)
 app.use("/api", employeeRoutes)
 app.use("/api", customerRoutes)
 app.use("/api", creditRoutes)
+app.use("/api", loanSettlementRoutes)
 app.use("/api", expenseRoutes)
 app.use("/api", profitRoutes)
 app.use("/api", dealerRoutes)
