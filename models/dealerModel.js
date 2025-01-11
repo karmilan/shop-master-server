@@ -17,7 +17,7 @@ const dealerSchema = mongoose.Schema({
     },
     address: {
         type: String,
-        required: true,
+        // required: true,
     },
     email: {
         type: String,
