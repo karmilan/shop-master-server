@@ -26,9 +26,9 @@ const login = async (req, res) => {
         const assignedShop = await Shop.findById(shop)
         console.log("assignedShop>>>", assignedShop);
 
-        if (!assignedShop) {
-            return res.status(404).json({ error: 'Shop not found' });
-        }
+        // if (!assignedShop) {
+        //     return res.status(404).json({ error: 'Shop not found' });
+        // }
 
         const user = await User.findOne({ username })
         console.log(user.shop);
