@@ -1,5 +1,6 @@
 import Credit from '../models/creditModel.js';
 import Customer from '../models/customerModel.js';
+import LoanBook from '../models/loanBookModel.js';
 
 
 // get credits
@@ -27,6 +28,29 @@ const addCredit = async (req, res) => {
         }
 
         const credit = await Credit.create({ customer: assignedCustomer, amount })
+        res.status(201).json({ message: 'credit added', credit })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+
+    }
+}
+
+// add new credit for loan book
+const addCreditForLoanBook = async (req, res) => {
+    const { loanBook, amount } = req.body
+    const { id } = req.params
+    try {
+
+        // Check if the Customer exists
+        const assignedLoanBook = await LoanBook.findById(loanBook);
+        console.log('first', assignedLoanBook)
+        console.log('req', req.body)
+
+        if (!assignedLoanBook) {
+            return res.status(404).json({ error: 'loan book not found' });
+        }
+
+        const credit = await Credit.create({ loanbook: assignedLoanBook, amount })
         res.status(201).json({ message: 'credit added', credit })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -62,7 +86,7 @@ const getCreditsByShop = async (req, res) => {
         const credit = await Credit.find({}).populate('customer');
         const filteredCredits = credit.filter(credit => credit.customer.shop.toString() === shop);
 
-        console.log("filteredCredits>>>", filteredCredits);
+
 
         if (!credit) {
             res.status(404)
@@ -136,5 +160,5 @@ const deleteCredit = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addCredit, deleteCredit, getCredits, getCreditsByCustomer, getCreditsByShop, getSingleCredit, updateCredit };
+export { addCredit, addCreditForLoanBook, deleteCredit, getCredits, getCreditsByCustomer, getCreditsByShop, getSingleCredit, updateCredit };
 
