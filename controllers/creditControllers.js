@@ -37,20 +37,18 @@ const addCredit = async (req, res) => {
 
 // add new credit for loan book
 const addCreditForLoanBook = async (req, res) => {
-    const { loanBook, amount } = req.body
+    const { loanbook, amount } = req.body
     const { id } = req.params
     try {
 
         // Check if the Customer exists
-        const assignedLoanBook = await LoanBook.findById(loanBook);
-        console.log('first', assignedLoanBook)
-        console.log('req', req.body)
+        const assignedLoanBook = await LoanBook.findById(loanbook);
 
         if (!assignedLoanBook) {
             return res.status(404).json({ error: 'loan book not found' });
         }
 
-        const credit = await Credit.create({ loanbook: assignedLoanBook, amount })
+        const credit = await Credit.create({ loanBook: assignedLoanBook, amount })
         res.status(201).json({ message: 'credit added', credit })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -83,15 +81,28 @@ const getCreditsByShop = async (req, res) => {
 
 
     try {
-        const credit = await Credit.find({}).populate('customer');
-        const filteredCredits = credit.filter(credit => credit.customer.shop.toString() === shop);
+        // const credit = await Credit.find({}).populate('customer').populate('customer');
+        // const credit2 = await Credit.find({})
+        const credit = await Credit.find({})
+            .populate({
+                path: 'loanBook',
+                populate: {
+                    path: 'customer',
+                    populate: {
+                        path: 'shop',
+                        model: 'Shop'
+                    }
+                }
+            });
 
+        const filteredCredits = credit.filter(credit => credit.loanBook.customer.shop._id.toString() === shop);
 
-
-        if (!credit) {
+        if (!filteredCredits || filteredCredits.length === 0) {
             res.status(404)
-            return res.status(404).json({ message: "credit not found" })
+            return res.status(404).json({ message: "filter cred not found" })
         }
+
+        // res.status(200).json({ credit })
         res.status(200).json({ filteredCredits })
     } catch (error) {
         if (error.name === "CastError" && error.kind === "ObjectId") {
