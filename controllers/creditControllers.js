@@ -95,7 +95,7 @@ const getCreditsByShop = async (req, res) => {
                 }
             });
 
-        const filteredCredits = credit.filter(credit => credit.loanBook.customer.shop._id.toString() === shop);
+        const filteredCredits = credit.filter(credit => credit.loanBook && credit.loanBook.customer.shop._id.toString() === shop);
 
         if (!filteredCredits || filteredCredits.length === 0) {
             res.status(404)
