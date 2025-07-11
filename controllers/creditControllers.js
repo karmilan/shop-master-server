@@ -81,8 +81,6 @@ const getCreditsByShop = async (req, res) => {
 
 
     try {
-        // const credit = await Credit.find({}).populate('customer').populate('customer');
-        // const credit2 = await Credit.find({})
         const credit = await Credit.find({})
             .populate({
                 path: 'loanBook',
@@ -104,6 +102,24 @@ const getCreditsByShop = async (req, res) => {
 
         // res.status(200).json({ credit })
         res.status(200).json({ filteredCredits })
+    } catch (error) {
+        if (error.name === "CastError" && error.kind === "ObjectId") {
+            return res.status(400).json({ message: "Invalid credit ID" })
+        }
+        res.status(500).json({ message: error.message })
+    }
+}
+
+// get credit by loan book
+const getCreditsByLoanBook = async (req, res) => {
+    const { id } = req.params
+    try {
+        const credit = await Credit.find({ loanBook: id }).populate('loanBook')
+        if (!credit) {
+            res.status(404)
+            return res.status(404).json({ message: "credit not found" })
+        }
+        res.status(200).json({ credit })
     } catch (error) {
         if (error.name === "CastError" && error.kind === "ObjectId") {
             return res.status(400).json({ message: "Invalid credit ID" })
@@ -171,5 +187,5 @@ const deleteCredit = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addCredit, addCreditForLoanBook, deleteCredit, getCredits, getCreditsByCustomer, getCreditsByShop, getSingleCredit, updateCredit };
+export { addCredit, addCreditForLoanBook, deleteCredit, getCredits, getCreditsByCustomer, getCreditsByLoanBook, getCreditsByShop, getSingleCredit, updateCredit };
 
