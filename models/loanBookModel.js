@@ -17,6 +17,9 @@ const loanBookSchema = mongoose.Schema({
     outstandingBalance: {
         type: Number,
     },
+    totalLoanAmount: {
+        type: Number,
+    },
     status: {
         type: String,
         default: "active",
