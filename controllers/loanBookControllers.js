@@ -4,7 +4,7 @@ import LoanBook from '../models/loanBookModel.js';
 // Create a new loan book entry
 const addLoanBook = async (req, res) => {
 
-    const { lbId, customer, creditLimit, outstandingBalance, totalLoanAmount, status, isApproved, isClosed } = req.body;
+    const { lbId, customer, creditLimit, outstandingBalance, totalLoanAmount, totalSettledAmount, isApproved, isClosed } = req.body;
     try {
         // Check if the Customer exists
         const assignedCustomer = await Customer.findById(customer);
@@ -12,7 +12,7 @@ const addLoanBook = async (req, res) => {
             return res.status(404).json({ error: 'customer not found' });
         }
 
-        const loanBook = await LoanBook.create({ customer: assignedCustomer, lbId, creditLimit, outstandingBalance, totalLoanAmount, status, isApproved });
+        const loanBook = await LoanBook.create({ customer: assignedCustomer, lbId, creditLimit, outstandingBalance, totalLoanAmount, totalSettledAmount, isApproved, isClosed });
         return res.status(201).json({ message: 'Loan book added', loanBook });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -97,7 +97,7 @@ const updateLoanBookById = async (req, res) => {
         if (!loanBook) {
             return res.status(404).json({ message: 'Loan book not found' });
         }
-        res.status(200).json({ creditLimit: loanBook.creditLimit, outstandingBalance: loanBook.outstandingBalance, totalLoanAmount: loanBook.totalLoanAmount, status: loanBook.status, isApproved: loanBook.isApproved, isClosed: loanBook.isClosed });
+        res.status(200).json({ creditLimit: loanBook.creditLimit, outstandingBalance: loanBook.outstandingBalance, totalLoanAmount: loanBook.totalLoanAmount, totalSettledAmount: loanBook.totalSettledAmount, isApproved: loanBook.isApproved, isClosed: loanBook.isClosed });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

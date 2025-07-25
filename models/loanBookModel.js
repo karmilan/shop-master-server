@@ -20,11 +20,10 @@ const loanBookSchema = mongoose.Schema({
     totalLoanAmount: {
         type: Number,
     },
-    status: {
-        type: String,
-        default: "active",
-        enum: ["active", "inactive", "settled"]
+    totalSettledAmount: {
+        type: Number,
     },
+
     isApproved: {
         type: Boolean,
         default: false
