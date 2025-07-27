@@ -1,4 +1,5 @@
 import Customer from '../models/customerModel.js';
+import LoanBook from '../models/loanBookModel.js';
 import LoanSettlement from '../models/loanSettlementModel.js';
 
 
@@ -34,6 +35,28 @@ const addLoanSettlement = async (req, res) => {
     }
 }
 
+// add new loanSettlement for loanbook 
+const addLoanSettlementForLoanBook = async (req, res) => {
+    const { loanBook, amount, isFullAmountSettled } = req.body
+    const { id } = req.params
+    try {
+
+        // Check if the loan book exists
+        const assignedLoanBook = await LoanBook.findById(loanBook);
+        console.log('assignedLoanBook>>', assignedLoanBook)
+
+        if (!assignedLoanBook) {
+            return res.status(404).json({ error: 'loan book not found' });
+        }
+
+        const loanSettlement = await LoanSettlement.create({ loanBook: assignedLoanBook, amount, isFullAmountSettled })
+        res.status(201).json({ message: 'loanSettlement added', loanSettlement })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+
+    }
+}
+
 // get loanSettlement by customer
 const getSingleLoanSettlement = async (req, res) => {
     const { id } = req.params
@@ -59,8 +82,19 @@ const getLoanSettlementsByShop = async (req, res) => {
 
 
     try {
-        const loanSettlement = await LoanSettlement.find({}).populate('customer');
-        const filteredLoanSettlements = loanSettlement.filter(loanSettlement => loanSettlement.customer.shop.toString() === shop);
+        const loanSettlement = await LoanSettlement.find({}).populate({
+            path: 'loanBook',
+            populate: {
+                path: 'customer',
+                populate: {
+                    path: 'shop',
+                    model: 'Shop'
+                }
+            }
+        });
+
+        console.log('loanSettlement>>', loanSettlement)
+        const filteredLoanSettlements = loanSettlement.filter(loanSettlement => loanSettlement.loanBook.customer.shop._id.toString() === shop);
 
         console.log("filteredLoanSettlements>>>", filteredLoanSettlements);
 
@@ -138,5 +172,5 @@ const deleteLoanSettlement = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
-export { addLoanSettlement, deleteLoanSettlement, getLoanSettlements, getLoanSettlementsByCustomer, getLoanSettlementsByShop, getSingleLoanSettlement, updateLoanSettlement };
+export { addLoanSettlement, addLoanSettlementForLoanBook, deleteLoanSettlement, getLoanSettlements, getLoanSettlementsByCustomer, getLoanSettlementsByShop, getSingleLoanSettlement, updateLoanSettlement };
 

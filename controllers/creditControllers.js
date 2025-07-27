@@ -41,7 +41,7 @@ const addCreditForLoanBook = async (req, res) => {
     const { id } = req.params
     try {
 
-        // Check if the Customer exists
+        // Check if the loan book exists
         const assignedLoanBook = await LoanBook.findById(loanbook);
 
         if (!assignedLoanBook) {

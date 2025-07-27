@@ -1,10 +1,18 @@
 import mongoose from 'mongoose'
 
 const loanSettlementSchema = mongoose.Schema({
-    customer: {
+    // customer: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Customer',
+    //     required: false
+    // },
+
+    loanBook: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Customer' // Reference to the Customer model for the loan settlement where the customer applicable
+        ref: 'LoanBook',
+        // required: false
     },
+
     amount: {
         type: Number,
         required: true
