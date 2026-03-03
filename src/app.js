@@ -2,6 +2,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import connectDB from '../config/db.js'
+import dns from 'dns'
 import authRoutes from '../routes/authRoutes.js'
 import cashPaymentRoutes from '../routes/cashPaymentRoutes.js'
 import cheqPaymentRoutes from '../routes/cheqPaymentRoutes.js'
@@ -17,6 +18,7 @@ import paymentRoutes from '../routes/paymentRoutes.js'
 import expenseRoutes from '../routes/profitRoutes.js'
 import shopRoutes from '../routes/shopRoutes.js'
 import userRoutes from '../routes/userRoutes.js'
+import dashboardRoutes from '../routes/dashboardRoutes.js'
 
 dotenv.config()
 console.log(process.env.MONGO_URI);
@@ -46,6 +48,7 @@ app.use("/api", credPaymentRoutes)
 app.use("/api", paymentRoutes)
 app.use("/api", userRoutes)
 app.use("/api", loanBookRoutes)
+app.use("/api", dashboardRoutes)
 app.use("/api/auth", authRoutes)
 
 
